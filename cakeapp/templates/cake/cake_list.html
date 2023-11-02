@@ -1,0 +1,45 @@
+{%extends 'cake/base.html'%}
+
+{%block body_block%}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+<div class="container">
+
+    <table class="table">
+
+        <tr>
+            <td>Name</td>
+            <td>Category</td>
+            <td>flavour</td>
+            <td>image</td>
+            <td>Action</td>
+        </tr>
+
+        {%for c in cake%}
+        <tr>
+            <td>{{c.name}}</td>
+            <td>{{c.Category}}</td>
+            <td>{{c.flavour}}</td>
+            <td>
+                <img src="{{c.image.url}}" alt="" width="50%" height="200px">
+            </td>
+            <td><a href="{%url 'cake-change' c.id%}"><i class="fa-regular fa-pen-to-square"></i></a>
+            <a href="{%url 'cake-remove' c.id%}"><i class="fa-solid fa-trash"></i></a>
+            <a href="{%url 'cake-detail' c.id%}">view</a>
+            <a href="{%url 'add-varient' c.id%}">Add varient</a></td>
+        {%endfor%}
+    </tr>
+
+
+    </table>
+
+
+
+
+</div>
+
+{%endblock%}
+
+
