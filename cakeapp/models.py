@@ -42,10 +42,12 @@ class Cakes(models.Model):
     image=models.ImageField(upload_to="images")
    
 
- 
-
     def __str__(self):
         return self.name
+    
+    def varients(self):
+        qs=self.cakevarients_set.all()
+        return qs
 
 class CakeVarients(models.Model):
     price=models.PositiveIntegerField()

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cakeapp',
+    'rest_framework',
+    'cake_api',
 ]
 
 MIDDLEWARE = [
