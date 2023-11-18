@@ -70,6 +70,10 @@ class CakeVarients(models.Model):
     cake=models.ForeignKey(Cakes,on_delete=models.CASCADE)
 
 
+    def __str__(self):
+        return self.cake.name
+
+
 class Offers(models.Model):
     cakevarient=models.ForeignKey(CakeVarients,on_delete=models.CASCADE)
     price=models.PositiveIntegerField()
@@ -110,6 +114,6 @@ from django.core.validators import MinValueValidator,MaxValueValidator
 
 class Reviews(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    cakevarient=models.ForeignKey(CakeVarients,on_delete=models.CASCADE)
+    cake=models.ForeignKey(Cakes,null=True,on_delete=models.SET_NULL)
     rating=models.PositiveIntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
     comment=models.CharField(max_length=300)

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cakeapp',
     'rest_framework',
     'cake_api',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
