@@ -22,9 +22,21 @@ class CakeVarientSerializer(serializers.ModelSerializer):
         model=CakeVarients
         fields="__all__"
 
+
+class ReviewSerializer(serializers.ModelSerializer):
+    id=serializers.CharField(read_only=True)
+    user=serializers.CharField(read_only=True)
+    cake=serializers.CharField(read_only=True)
+
+    class Meta:
+        model=Reviews
+        fields="__all__"
+
+
 class  CakeSerializer(serializers.ModelSerializer):
     Category=serializers.StringRelatedField(read_only=True)
     varients=CakeVarientSerializer(many=True,read_only=True)
+    reviews=ReviewSerializer(many=True,read_only=True)
     
     
     class Meta:
@@ -59,14 +71,7 @@ class orderSerializer(serializers.ModelSerializer):
 
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    id=serializers.CharField(read_only=True)
-    user=serializers.CharField(read_only=True)
-    cake=serializers.CharField(read_only=True)
 
-    class Meta:
-        model=Reviews
-        fields="__all__"
 
 
 

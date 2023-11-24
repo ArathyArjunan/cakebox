@@ -48,6 +48,10 @@ class Cakes(models.Model):
     def varients(self):
         qs=self.cakevarients_set.all()
         return qs
+    
+    def reviews(self):
+        qs=self.reviews_set.all()
+        return qs
 
 class CakeVarients(models.Model):
     price=models.PositiveIntegerField()
