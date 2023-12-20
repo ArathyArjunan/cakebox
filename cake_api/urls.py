@@ -9,6 +9,7 @@ router=DefaultRouter()
 router.register("cakes",views.CakeView,basename="cakes")
 router.register("carts",views.CartsView,basename="carts")
 router.register("orders",views.OrderView,basename="orders")
+router.register("reviews",views.ReviewView,basename="reviews")
 
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from cakeapp.models import User,Category,Cakes,CakeVarients,Offers
+from cakeapp.models import User,Category,Cakes,CakeVarients,Offers,Orders
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -10,6 +10,10 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(forms.Form):
     username=forms.CharField()
     password=forms.CharField(widget=forms.PasswordInput)
+    widgets={
+        "username":forms.TextInput(),
+        "password":forms.PasswordInput()
+    }
 
 
 class CategoryCreateForm(forms.ModelForm):
@@ -37,4 +41,13 @@ class OfferAddForm(forms.ModelForm):
         widgets={
             "start_date":forms.DateInput(attrs={"type":"date"}),
             "due_date":forms.DateInput(attrs={"type":"date"})
+        }
+
+class OrderChangeForm(forms.ModelForm):
+    class Meta:
+        model=Orders
+        exclude=("user","cakevarient","orderd_date","address")
+        widgets={
+            "expected_date":forms.DateInput(attrs={"type":"date"}),
+            "status":forms.TextInput()
         }

@@ -5,9 +5,9 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.utils.decorators import method_decorator
 
-from django.views.generic import CreateView,FormView,ListView,UpdateView,DetailView
-from cakeapp.forms import RegistrationForm,LoginForm,CategoryCreateForm,CakeAddForm,CakeVarientForm,OfferAddForm
-from cakeapp.models import User,Category,Cakes,CakeVarients,Offers
+from django.views.generic import CreateView,FormView,ListView,UpdateView,DetailView,TemplateView,View
+from cakeapp.forms import RegistrationForm,LoginForm,CategoryCreateForm,CakeAddForm,CakeVarientForm,OfferAddForm,OrderChangeForm
+from cakeapp.models import User,Category,Cakes,CakeVarients,Offers,Orders,Reviews
 from django.urls import reverse_lazy,reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
@@ -64,10 +64,17 @@ class SignInView(FormView):
             if usr:
                 login(request,usr)
                 messages.success(request,"login successfully")
-                return redirect("signin")
+                return redirect("adminindex")
             else:
                 messages.error(request,"invalid creadential")
                 return render(request,self.template_name,{"form":form})  
+            
+
+class IndexView(TemplateView):
+    template_name="cake/home.html"
+
+class AdminView(TemplateView):
+    template_name="cake/adminindex.html"
 
 @method_decorator(decs,name="dispatch")
 class CategoryCreateView(CreateView,ListView):
@@ -75,7 +82,7 @@ class CategoryCreateView(CreateView,ListView):
     form_class=CategoryCreateForm
     model=Category
     context_object_name="categories"
-    success_url=reverse_lazy("category-add")
+    success_url=reverse_lazy("adminindex")
 
     def form_valid(self, form):
         messages.success(self.request,"category added successfully")
@@ -101,7 +108,7 @@ class CakeCreateView(CreateView):
     template_name="cake/cake_add.html"
     model=Cakes
     form_class=CakeAddForm
-    success_url=reverse_lazy("cake-add")
+    success_url=reverse_lazy("adminindex")
     def form_valid(self, form):
         messages.success(self.request,"cake has been added")
         return super().form_valid(form)
@@ -122,7 +129,7 @@ class CakeUpdateView(UpdateView):
     template_name="cake/cake_edit.html"
     model=Cakes
     form_class=CakeAddForm
-    success_url=reverse_lazy("cake-list")
+    success_url=reverse_lazy("adminindex")
     def form_valid(self, form):
         messages.success(self.request,"cake added successfully")
         return super().form_valid(form)
@@ -144,7 +151,7 @@ class CakeVarientCreateView(CreateView):
     template_name="cake/cakevarient_add.html"
     form_class=CakeVarientForm
     model=CakeVarients
-    success_url=reverse_lazy("cake-list")
+    success_url=reverse_lazy("adminindex")
     def form_valid(self, form):
         id=self.kwargs.get("pk")
         obj=Cakes.objects.get(id=id)
@@ -209,6 +216,47 @@ def remove_offer(request,*args,**kwargs):
     cake_id=offer_object.cakevarient.cake.id
     offer_object.delete()
     return redirect("cake-detail",pk=cake_id)
+
+@method_decorator(decs,name="dispatch")
+class OrderView(ListView):
+    template_name="cake/order.html"
+    model=Orders
+    context_object_name="orders"
+    def get_queryset(self):
+        return Orders.objects.filter(status="order-placed")
+    
+
+
+class OrderUpdateView(UpdateView):
+    template_name="cake/order_edit.html"
+    model=Orders
+    form_class=OrderChangeForm
+    success_url=reverse_lazy("adminindex")
+    def form_valid(self,form):
+        messages.success(self.request,"order updated successfully")
+        return super().form_valid(form)
+    def form_invalid(self,form):
+        messages.error(self.request,"order updating failed")
+        return super().form_invalid(form)
+    
+
+@method_decorator(decs,name="dispatch")
+class ReviewView(ListView):
+    template_name="cake/review.html"
+    model=Reviews
+    context_object_name="review"
+
+
+
+    
+
+
+    
+
+    
+
+
+
         
 
 @signin_required

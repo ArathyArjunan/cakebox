@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 
 from cake_api.serializers import Userserializer,CakeSerializer,CartSerializer,orderSerializer,ReviewSerializer
 
-from cakeapp.models import User,Cakes,CakeVarients,Carts,Orders
+from cakeapp.models import User,Cakes,CakeVarients,Carts,Orders,Reviews
 
 
 class Userview(APIView):
@@ -43,7 +43,7 @@ class CakeView(ModelViewSet):
       
 
    @action(methods=["post"],detail=True)
-   def place_order(self,request,*args, **kwargs):
+   def place_order(self,request,*args,**kwargs):
       id=kwargs.get("pk")
       varient_obj=CakeVarients.objects.get(id=id)
       user=request.user
@@ -105,5 +105,26 @@ class OrderView(ViewSet):
         if instance.user==request.user:
             instance.delete()
             return Response(data={"message":"order removed successfully"})
+        else:
+            return Response(data={"message":"permission denied for current user"})
+        
+
+class ReviewView(ViewSet):
+    #authentication_classes=[authentication.BasicAuthentication]
+    authentication_classes=[authentication.TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+    serializer_class=ReviewSerializer
+    
+    def list(self,request,*args,**kwargs):
+        qs=Reviews.objects.filter(user=request.user)
+        serializer=ReviewSerializer(qs,many=True)
+        return Response(data=serializer.data)
+    
+    def destroy(self,request,*args, **kwargs):
+        id=kwargs.get("pk")
+        instance=Reviews.objects.get(id=id)
+        if instance.user==request.user:
+            instance.delete()
+            return Response(data={"message":"review removed successfully"})
         else:
             return Response(data={"message":"permission denied for current user"})

@@ -91,6 +91,7 @@ class Carts(models.Model):
     options=(
         ("in-cart","in-cart"),
         ("order-placed","order-placed"),
+        ("deliverd","delivered"),
         ("cancelled","cancelled")
     )
 
